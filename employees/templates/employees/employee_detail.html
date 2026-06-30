@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ employee.first_name }} {{ employee.last_name }} | Employee Management{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="page-header">
+        <h1>{{ employee.first_name }} {{ employee.last_name }}</h1>
+        <div class="actions">
+            <a class="button secondary" href="{% url 'employee_update' employee.pk %}">Edit</a>
+            <a class="button danger" href="{% url 'employee_delete' employee.pk %}">Delete</a>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <strong>Email</strong>
+            {{ employee.email }}
+        </div>
+        <div class="detail-item">
+            <strong>Department</strong>
+            {{ employee.department }}
+        </div>
+        <div class="detail-item">
+            <strong>Role</strong>
+            {{ employee.role }}
+        </div>
+        <div class="detail-item">
+            <strong>Salary</strong>
+            {{ employee.salary }}
+        </div>
+        <div class="detail-item">
+            <strong>Phone</strong>
+            {{ employee.phone|default:'Not added' }}
+        </div>
+        <div class="detail-item">
+            <strong>Date Hired</strong>
+            {{ employee.date_hired }}
+        </div>
+        <div class="detail-item">
+            <strong>User Account</strong>
+            {% if employee.user %}
+                {{ employee.user.username }}
+            {% else %}
+                Not linked
+            {% endif %}
+        </div>
+        <div class="detail-item">
+            <strong>Address</strong>
+            {{ employee.address|linebreaksbr|default:'Not added' }}
+        </div>
+    </div>
+
+    <p>
+        <a href="{% url 'employee_list' %}">Back to employee list</a>
+    </p>
+</section>
+{% endblock %}

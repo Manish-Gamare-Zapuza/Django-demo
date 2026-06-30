@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Employees | Employee Management{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="page-header">
+        <h1>Employees</h1>
+        <a class="button" href="{% url 'employee_create' %}">Add Employee</a>
+    </div>
+
+    {% if employees %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Role</th>
+                    <th>Account</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'employee_detail' employee.pk %}">
+                                {{ employee.first_name }} {{ employee.last_name }}
+                            </a>
+                        </td>
+                        <td>{{ employee.email }}</td>
+                        <td>{{ employee.department }}</td>
+                        <td>{{ employee.role }}</td>
+                        <td>
+                            {% if employee.user %}
+                                {{ employee.user.username }}
+                            {% else %}
+                                Not linked
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{% url 'employee_detail' employee.pk %}">View</a>
+                                <a href="{% url 'employee_update' employee.pk %}">Edit</a>
+                                <a href="{% url 'employee_delete' employee.pk %}">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No employees found.</p>
+        <a class="button" href="{% url 'employee_create' %}">Add First Employee</a>
+    {% endif %}
+</section>
+{% endblock %}

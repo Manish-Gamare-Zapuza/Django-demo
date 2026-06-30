@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | Employee Management{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Employee Management System</h1>
+    <p>
+        A simple Django project for learning authentication, models, forms,
+        views, templates, and CRUD operations.
+    </p>
+    <div class="actions">
+        <a class="button" href="{% url 'login' %}">Login</a>
+        <a class="button secondary" href="{% url 'register' %}">Create Account</a>
+    </div>
+</section>
+{% endblock %}
