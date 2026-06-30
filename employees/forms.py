@@ -24,6 +24,8 @@ class EmployeeForm(forms.ModelForm):
         }
 
 
+
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
