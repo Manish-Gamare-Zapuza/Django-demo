@@ -88,3 +88,4 @@ def employee_delete(request, pk):
         return redirect('employee_list')
 
     return render(request, 'employees/employee_confirm_delete.html', {'employee': employee})
+
