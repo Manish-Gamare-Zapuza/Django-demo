@@ -12,6 +12,7 @@ class EmployeeForm(forms.ModelForm):
             'user',
             'first_name',
             'last_name',
+            'gender',
             'email',
             'department',
             'role',
