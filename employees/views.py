@@ -1,10 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import EmployeeForm, RegisterForm
 from .models import Employee
+
+
+class WelcomeLoginView(LoginView):
+    template_name = 'registration/login.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, f'Welcome back, {self.request.user.username}!')
+        return response
 
 
 def home(request):
@@ -32,8 +43,45 @@ def register(request):
 
 @login_required
 def employee_list(request):
-    employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
-    return render(request, 'employees/employee_list.html', {'employees': employees})
+    query = request.GET.get('q', '').strip()
+    sort = request.GET.get('sort', 'first_name')
+    order = request.GET.get('order', 'asc')
+
+    sort_options = {
+        'first_name': ('first_name', 'last_name'),
+        'email': ('email',),
+        'department': ('department',),
+        'role': ('role',),
+        'account': ('user__username',),
+    }
+    sort_fields = sort_options.get(sort, sort_options['first_name'])
+    if sort not in sort_options:
+        sort = 'first_name'
+    if order not in {'asc', 'desc'}:
+        order = 'asc'
+
+    employees = Employee.objects.select_related('user')
+    if query:
+        employees = employees.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+            | Q(department__icontains=query)
+            | Q(role__icontains=query)
+            | Q(phone__icontains=query)
+        )
+
+    ordering = list(sort_fields)
+    if order == 'desc':
+        ordering = [f'-{field}' for field in ordering]
+    employees = employees.order_by(*ordering)
+
+    return render(request, 'employees/employee_list.html', {
+        'employees': employees,
+        'query': query,
+        'current_sort': sort,
+        'current_order': order,
+    })
 
 
 @login_required
@@ -45,7 +93,7 @@ def employee_detail(request, pk):
 @login_required
 def employee_create(request):
     if request.method == 'POST':
-        form = EmployeeForm(request.POST)
+        form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee added successfully.')
@@ -64,7 +112,7 @@ def employee_update(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=employee)
+        form = EmployeeForm(request.POST, request.FILES, instance=employee)
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee updated successfully.')
