@@ -18,7 +18,9 @@
                     <th>Department</th>
                     <th>Role</th>
                     <th>Account</th>
+                    <th>profile_pic</th>
                     <th>Actions</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +41,7 @@
                                 Not linked
                             {% endif %}
                         </td>
+                    <td>{{ employee.profile_pic }}</td>
                         <td>
                             <div class="actions">
                                 <a href="{% url 'employee_detail' employee.pk %}">View</a>

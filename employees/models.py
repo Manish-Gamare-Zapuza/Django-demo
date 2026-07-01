@@ -18,6 +18,7 @@ class Employee(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
     date_hired = models.DateField(auto_now_add=True)
+    profile_pic = models.ImageField(upload_to='profile_pics', blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.role}"
