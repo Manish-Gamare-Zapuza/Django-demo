@@ -9,6 +9,24 @@
         <a class="button" href="{% url 'employee_create' %}">Add Employee</a>
     </div>
 
+    <!-- Search Form -->
+    <form method="GET" style="margin:20px 0;">
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search by name, email or department"
+            style="padding:8px; width:300px;">
+
+        <button type="submit" class="button">
+            Search
+        </button>
+
+        <a class="button" href="{% url 'employee_list' %}">
+            Clear
+        </a>
+    </form>
+
     {% if employees %}
         <table>
             <thead>
