@@ -18,6 +18,23 @@ class Employee(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
     date_hired = models.DateField(auto_now_add=True)
+    ACTIVE = 'active'
+    INACTIVE = 'inactive'
+    ON_LEAVE = 'on_leave'
+    STATUS_CHOICES = [
+        (ACTIVE, 'Active'),
+        (INACTIVE, 'Inactive'),
+        (ON_LEAVE, 'On Leave'),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=ACTIVE
+    )
+
+    def is_active_employee(self):
+        return self.status == self.ACTIVE
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.role}"
