@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import EmployeeForm, RegisterForm
 from .models import Employee
-
+from django.db import models
 
 def home(request):
     if request.user.is_authenticated:
@@ -33,7 +33,16 @@ def register(request):
 @login_required
 def employee_list(request):
     employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
-    return render(request, 'employees/employee_list.html', {'employees': employees})
+    search_query = request.GET.get('search', '')
+    if search_query:
+        employees = employees.filter(
+            models.Q(first_name__icontains=search_query) |
+            models.Q(last_name__icontains=search_query) |
+            models.Q(email__icontains=search_query) |
+            models.Q(department__icontains=search_query) |
+            models.Q(role__icontains=search_query)
+        )
+    return render(request, 'employees/employee_list.html', {'employees': employees, 'search_query': search_query})
 
 
 @login_required
