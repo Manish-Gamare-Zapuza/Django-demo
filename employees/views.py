@@ -32,8 +32,16 @@ def register(request):
 
 @login_required
 def employee_list(request):
-    employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
-    return render(request, 'employees/employee_list.html', {'employees': employees})
+
+        search = request.GET.get('search', '')
+
+        if search:
+            employees = Employee.objects.filter(first_name__icontains=search).select_related('user').order_by(
+                'first_name', 'last_name')
+        else:
+            employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
+
+        return render(request, 'employees/employee_list.html', {'employees': employees})
 
 
 @login_required
