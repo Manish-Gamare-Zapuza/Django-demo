@@ -18,6 +18,7 @@ class EmployeeForm(forms.ModelForm):
             'salary',
             'phone',
             'address',
+            'profile_pic',
         ]
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
