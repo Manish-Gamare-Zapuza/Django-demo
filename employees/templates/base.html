@@ -1,251 +1,657 @@
+{#<!doctype html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="utf-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>{% block title %}Employee Management{% endblock %}</title>#}
+{#    <style>#}
+{#        * {#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{##}
+{#        body {#}
+{#            margin: 0;#}
+{#            color: #1f2937;#}
+{#            background: #f4f7fb;#}
+{#            font-family: Arial, Helvetica, sans-serif;#}
+{#        }#}
+{##}
+{#        a {#}
+{#            color: #2563eb;#}
+{#            text-decoration: none;#}
+{#        }#}
+{##}
+{#        a:hover {#}
+{#            text-decoration: underline;#}
+{#        }#}
+{##}
+{#        .navbar {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            justify-content: space-between;#}
+{#            gap: 16px;#}
+{#            padding: 16px 24px;#}
+{#            color: #ffffff;#}
+{#            background: #111827;#}
+{#        }#}
+{##}
+{#        .brand {#}
+{#            color: #ffffff;#}
+{#            font-size: 20px;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        .nav-links {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            flex-wrap: wrap;#}
+{#        }#}
+{##}
+{#        .nav-links a,#}
+{#        .logout-button {#}
+{#            color: #ffffff;#}
+{#            font: inherit;#}
+{#            background: none;#}
+{#            border: 0;#}
+{#            cursor: pointer;#}
+{#        }#}
+{##}
+{#        .logout-form {#}
+{#            margin: 0;#}
+{#        }#}
+{##}
+{#        .container {#}
+{#            width: min(1100px, calc(100% - 32px));#}
+{#            margin: 32px auto;#}
+{#        }#}
+{##}
+{#        .panel {#}
+{#            padding: 24px;#}
+{#            background: #ffffff;#}
+{#            border: 1px solid #d8e0eb;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);#}
+{#        }#}
+{##}
+{#        .page-header {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            justify-content: space-between;#}
+{#            gap: 16px;#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{##}
+{#        h1,#}
+{#        h2 {#}
+{#            margin: 0 0 12px;#}
+{#            color: #111827;#}
+{#        }#}
+{##}
+{#        p {#}
+{#            line-height: 1.6;#}
+{#        }#}
+{##}
+{#        .button,#}
+{#        button {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            min-height: 38px;#}
+{#            padding: 8px 14px;#}
+{#            color: #ffffff;#}
+{#            background: #2563eb;#}
+{#            border: 1px solid #2563eb;#}
+{#            border-radius: 6px;#}
+{#            font: inherit;#}
+{#            cursor: pointer;#}
+{#        }#}
+{##}
+{#        .button.secondary {#}
+{#            color: #1f2937;#}
+{#            background: #ffffff;#}
+{#            border-color: #cbd5e1;#}
+{#        }#}
+{##}
+{#        .button.danger,#}
+{#        button.danger {#}
+{#            background: #dc2626;#}
+{#            border-color: #dc2626;#}
+{#        }#}
+{##}
+{#        table {#}
+{#            width: 100%;#}
+{#            border-collapse: collapse;#}
+{#            background: #ffffff;#}
+{#        }#}
+{##}
+{#        th,#}
+{#        td {#}
+{#            padding: 12px;#}
+{#            text-align: left;#}
+{#            border-bottom: 1px solid #e5e7eb;#}
+{#        }#}
+{##}
+{#        th {#}
+{#            color: #374151;#}
+{#            background: #eef2f7;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        .actions {#}
+{#            display: flex;#}
+{#            gap: 8px;#}
+{#            flex-wrap: wrap;#}
+{#        }#}
+{##}
+{#        .messages {#}
+{#            display: grid;#}
+{#            gap: 8px;#}
+{#            margin-bottom: 18px;#}
+{#        }#}
+{##}
+{#        .message {#}
+{#            padding: 12px 14px;#}
+{#            background: #ecfdf5;#}
+{#            border: 1px solid #a7f3d0;#}
+{#            border-radius: 6px;#}
+{#        }#}
+{##}
+{#        form {#}
+{#            display: grid;#}
+{#            gap: 14px;#}
+{#        }#}
+{##}
+{#        .form-row label {#}
+{#            display: block;#}
+{#            margin-bottom: 6px;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        input,#}
+{#        select,#}
+{#        textarea {#}
+{#            width: 100%;#}
+{#            padding: 10px 12px;#}
+{#            border: 1px solid #cbd5e1;#}
+{#            border-radius: 6px;#}
+{#            font: inherit;#}
+{#        }#}
+{##}
+{#        .errorlist {#}
+{#            margin: 6px 0 0;#}
+{#            padding-left: 18px;#}
+{#            color: #b91c1c;#}
+{#        }#}
+{##}
+{#        .detail-grid {#}
+{#            display: grid;#}
+{#            grid-template-columns: repeat(2, minmax(0, 1fr));#}
+{#            gap: 16px;#}
+{#        }#}
+{##}
+{#        .detail-item {#}
+{#            padding: 14px;#}
+{#            background: #f8fafc;#}
+{#            border: 1px solid #e2e8f0;#}
+{#            border-radius: 6px;#}
+{#        }#}
+{##}
+{#        .detail-item strong {#}
+{#            display: block;#}
+{#            margin-bottom: 6px;#}
+{#            color: #475569;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        @media (max-width: 700px) {#}
+{#            .navbar,#}
+{#            .page-header {#}
+{#                align-items: flex-start;#}
+{#                flex-direction: column;#}
+{#            }#}
+{##}
+{#            .detail-grid {#}
+{#                grid-template-columns: 1fr;#}
+{#            }#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#    <nav class="navbar">#}
+{#        <a class="brand" href="{% url 'home' %}">Employee Management</a>#}
+{#        <div class="nav-links">#}
+{#            {% if user.is_authenticated %}#}
+{#                <a href="{% url 'employee_list' %}">Employees</a>#}
+{#                <a href="{% url 'employee_create' %}">Add Employee</a>#}
+{#                <span>{{ user.username }}</span>#}
+{#                <form class="logout-form" method="post" action="{% url 'logout' %}">#}
+{#                    {% csrf_token %}#}
+{#                    <button class="logout-button" type="submit">Logout</button>#}
+{#                </form>#}
+{#            {% else %}#}
+{#                <a href="{% url 'login' %}">Login</a>#}
+{#                <a href="{% url 'register' %}">Register</a>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </nav>#}
+{##}
+{#    <main class="container">#}
+{#        {% if messages %}#}
+{#            <div class="messages">#}
+{#                {% for message in messages %}#}
+{#                    <div class="message">{{ message }}</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#        {% endif %}#}
+{##}
+{#        {% block content %}{% endblock %}#}
+{#    </main>#}
+{#</body>#}
+{#</html>#}
+
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Employee Management{% endblock %}</title>
+
     <style>
-        * {
-            box-sizing: border-box;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,Helvetica,sans-serif;
         }
 
-        body {
-            margin: 0;
-            color: #1f2937;
-            background: #f4f7fb;
-            font-family: Arial, Helvetica, sans-serif;
+        body{
+            background:linear-gradient(135deg,#eef2ff,#dbeafe);
+            min-height:100vh;
+            color:#333;
         }
 
-        a {
-            color: #2563eb;
-            text-decoration: none;
+        a{
+            text-decoration:none;
         }
 
-        a:hover {
-            text-decoration: underline;
+        /* Navbar */
+
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:18px 40px;
+            background:linear-gradient(90deg,#1e3a8a,#2563eb);
+            color:white;
+            box-shadow:0 5px 15px rgba(0,0,0,.2);
         }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 16px 24px;
-            color: #ffffff;
-            background: #111827;
+        .brand{
+            color:white;
+            font-size:24px;
+            font-weight:bold;
         }
 
-        .brand {
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: 700;
+        .nav-links{
+            display:flex;
+            align-items:center;
+            gap:18px;
         }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+        .nav-links a{
+            color:white;
+            transition:.3s;
         }
 
-        .nav-links a,
-        .logout-button {
-            color: #ffffff;
-            font: inherit;
-            background: none;
-            border: 0;
-            cursor: pointer;
+        .nav-links a:hover{
+            color:#FFD54F;
         }
 
-        .logout-form {
-            margin: 0;
+        .logout-button{
+            background:none;
+            border:none;
+            color:white;
+            cursor:pointer;
+            font-size:16px;
         }
 
-        .container {
-            width: min(1100px, calc(100% - 32px));
-            margin: 32px auto;
+        .logout-button:hover{
+            color:#FFD54F;
         }
 
-        .panel {
-            padding: 24px;
-            background: #ffffff;
-            border: 1px solid #d8e0eb;
-            border-radius: 8px;
-            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        .logout-form{
+            margin:0;
         }
 
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
+        /* Main */
+
+        .container{
+            width:min(1100px,95%);
+            margin:35px auto;
         }
 
-        h1,
-        h2 {
-            margin: 0 0 12px;
-            color: #111827;
+        /* Card */
+
+        .panel{
+            background:white;
+            padding:35px;
+            border-radius:15px;
+            box-shadow:0 15px 40px rgba(0,0,0,.12);
+            animation:fadeIn .6s ease;
         }
 
-        p {
-            line-height: 1.6;
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translateY(25px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
         }
 
-        .button,
-        button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 38px;
-            padding: 8px 14px;
-            color: #ffffff;
-            background: #2563eb;
-            border: 1px solid #2563eb;
-            border-radius: 6px;
-            font: inherit;
-            cursor: pointer;
+        /* Heading */
+
+        h1,h2{
+            margin-bottom:20px;
+            color:#1e3a8a;
         }
 
-        .button.secondary {
-            color: #1f2937;
-            background: #ffffff;
-            border-color: #cbd5e1;
+        p{
+            line-height:1.6;
         }
 
-        .button.danger,
-        button.danger {
-            background: #dc2626;
-            border-color: #dc2626;
+        /* Buttons */
+
+        button,
+        .button{
+
+            display:inline-flex;
+            justify-content:center;
+            align-items:center;
+            padding:10px 20px;
+            background:#2563eb;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            transition:.3s;
+            font-size:15px;
+            font-weight:bold;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #ffffff;
+        button:hover,
+        .button:hover{
+
+            background:#1d4ed8;
+            transform:translateY(-2px);
+
         }
 
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+        .button.secondary{
+
+            background:white;
+            color:#333;
+            border:1px solid #ccc;
+
         }
 
-        th {
-            color: #374151;
-            background: #eef2f7;
-            font-weight: 700;
+        .button.secondary:hover{
+
+            background:#f2f2f2;
+
         }
 
-        .actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        .button.danger{
+
+            background:#dc2626;
+
         }
 
-        .messages {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 18px;
+        .button.danger:hover{
+
+            background:#b91c1c;
+
         }
 
-        .message {
-            padding: 12px 14px;
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            border-radius: 6px;
+        /* Form */
+
+        form{
+
+            display:grid;
+            gap:18px;
+
         }
 
-        form {
-            display: grid;
-            gap: 14px;
-        }
+        .form-row label{
 
-        .form-row label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 700;
+            display:block;
+            margin-bottom:6px;
+            font-weight:bold;
+
         }
 
         input,
         select,
-        textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font: inherit;
+        textarea{
+
+            width:100%;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #d1d5db;
+            font-size:15px;
+            transition:.3s;
+
         }
 
-        .errorlist {
-            margin: 6px 0 0;
-            padding-left: 18px;
-            color: #b91c1c;
+        input:focus,
+        select:focus,
+        textarea:focus{
+
+            border-color:#2563eb;
+            box-shadow:0 0 10px rgba(37,99,235,.25);
+            outline:none;
+
         }
 
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
+        /* Table */
+
+        table{
+
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+
         }
 
-        .detail-item {
-            padding: 14px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+        th{
+
+            background:#2563eb;
+            color:white;
+            padding:14px;
+
         }
 
-        .detail-item strong {
-            display: block;
-            margin-bottom: 6px;
-            color: #475569;
-            font-size: 14px;
+        td{
+
+            padding:14px;
+            border-bottom:1px solid #ddd;
+
         }
 
-        @media (max-width: 700px) {
-            .navbar,
-            .page-header {
-                align-items: flex-start;
-                flex-direction: column;
+        tbody tr{
+
+            transition:.3s;
+
+        }
+
+        tbody tr:hover{
+
+            background:#eff6ff;
+
+        }
+
+        /* Messages */
+
+        .messages{
+
+            margin-bottom:20px;
+
+        }
+
+        .message{
+
+            background:#d1fae5;
+            border-left:5px solid #10b981;
+            padding:14px;
+            border-radius:8px;
+
+        }
+
+        .actions{
+
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+
+        }
+
+        .page-header{
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+
+        }
+
+        .detail-grid{
+
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:20px;
+
+        }
+
+        .detail-item{
+
+            background:#f8fafc;
+            padding:15px;
+            border-radius:10px;
+            border:1px solid #ddd;
+
+        }
+
+        .detail-item strong{
+
+            display:block;
+            margin-bottom:6px;
+            color:#2563eb;
+
+        }
+
+        .errorlist{
+
+            color:red;
+            margin-top:6px;
+            padding-left:18px;
+
+        }
+
+        @media(max-width:768px){
+
+            .navbar{
+
+                flex-direction:column;
+                align-items:flex-start;
+                gap:15px;
+
             }
 
-            .detail-grid {
-                grid-template-columns: 1fr;
+            .nav-links{
+
+                flex-wrap:wrap;
+
             }
+
+            .detail-grid{
+
+                grid-template-columns:1fr;
+
+            }
+
         }
+
     </style>
-</head>
-<body>
-    <nav class="navbar">
-        <a class="brand" href="{% url 'home' %}">Employee Management</a>
-        <div class="nav-links">
-            {% if user.is_authenticated %}
-                <a href="{% url 'employee_list' %}">Employees</a>
-                <a href="{% url 'employee_create' %}">Add Employee</a>
-                <span>{{ user.username }}</span>
-                <form class="logout-form" method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button class="logout-button" type="submit">Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
-        </div>
-    </nav>
 
-    <main class="container">
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="message">{{ message }}</div>
-                {% endfor %}
-            </div>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a class="brand" href="{% url 'home' %}">
+        👨‍💼 Employee Management
+    </a>
+
+    <div class="nav-links">
+
+        {% if user.is_authenticated %}
+
+            <a href="{% url 'employee_list' %}">Employees</a>
+
+            <a href="{% url 'employee_create' %}">Add Employee</a>
+
+            <span>👋 {{ user.username }}</span>
+
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="logout-button" type="submit">
+                    Logout
+                </button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">Login</a>
+
+            <a href="{% url 'register' %}">Register</a>
+
         {% endif %}
 
-        {% block content %}{% endblock %}
-    </main>
+    </div>
+
+</nav>
+
+<main class="container">
+
+    {% if messages %}
+
+        <div class="messages">
+
+            {% for message in messages %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
 </body>
 </html>
