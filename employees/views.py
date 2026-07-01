@@ -32,6 +32,7 @@ def register(request):
 
 @login_required
 def employee_list(request):
+
     employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
     search_query = request.GET.get('search', '')
     if search_query:
