@@ -45,7 +45,7 @@ def employee_detail(request, pk):
 @login_required
 def employee_create(request):
     if request.method == 'POST':
-        form = EmployeeForm(request.POST)
+        form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee added successfully.')
@@ -64,7 +64,7 @@ def employee_update(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=employee)
+        form = EmployeeForm(request.POST, request.FILES, instance=employee)
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee updated successfully.')
