@@ -12,7 +12,23 @@
         </div>
     </div>
 
+    <div class="profile-summary">
+        {% if employee.profile_photo %}
+            <img class="photo-large" src="{{ employee.profile_photo.url }}" alt="{{ employee.first_name }} {{ employee.last_name }}">
+        {% else %}
+            <span class="avatar large">{{ employee.first_name|first }}{{ employee.last_name|first }}</span>
+        {% endif %}
+    </div>
+
     <div class="detail-grid">
+        <div class="detail-item">
+            <strong>First Name</strong>
+            {{ employee.first_name }}
+        </div>
+        <div class="detail-item">
+            <strong>Last Name</strong>
+            {{ employee.last_name }}
+        </div>
         <div class="detail-item">
             <strong>Email</strong>
             {{ employee.email }}

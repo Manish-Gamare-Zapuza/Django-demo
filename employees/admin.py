@@ -3,6 +3,6 @@ from .models import Employee
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'department', 'role', 'user')
+    list_display = ('first_name', 'last_name', 'email', 'department', 'role', 'date_hired', 'user')
     list_filter = ('department', 'role')
-    search_fields = ('first_name', 'last_name', 'email', 'department', 'role')
+    search_fields = ('first_name', 'last_name', 'email', 'department', 'role', 'phone')

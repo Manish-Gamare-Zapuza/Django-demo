@@ -9,68 +9,102 @@
         <a class="button" href="{% url 'employee_create' %}">Add Employee</a>
     </div>
 
-    <!-- Search Form -->
-    <form method="GET" style="margin:20px 0;">
-        <input
-            type="text"
-            name="search"
-            value="{{ search }}"
-            placeholder="Search by name, email or department"
-            style="padding:8px; width:300px;">
-
-        <button type="submit" class="button">
-            Search
-        </button>
-
-        <a class="button" href="{% url 'employee_list' %}">
-            Clear
-        </a>
+    <form class="search-form" method="get">
+        <input type="search" name="q" value="{{ query }}" placeholder="Search employees">
+        <button type="submit">Search</button>
+        {% if query %}
+            <a class="button secondary" href="{% url 'employee_list' %}">Clear</a>
+        {% endif %}
     </form>
 
     {% if employees %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th>Role</th>
-                    <th>Account</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for employee in employees %}
+        <div class="table-wrap">
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            <a href="{% url 'employee_detail' employee.pk %}">
-                                {{ employee.first_name }} {{ employee.last_name }}
-                            </a>
-                        </td>
-                        <td>{{ employee.email }}</td>
-                        <td>{{ employee.department }}</td>
-                        <td>{{ employee.role }}</td>
-                        <td>
-                            {% if employee.user %}
-                                {{ employee.user.username }}
-                            {% else %}
-                                Not linked
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <a href="{% url 'employee_detail' employee.pk %}">View</a>
-                                <a href="{% url 'employee_update' employee.pk %}">Edit</a>
-                                <a href="{% url 'employee_delete' employee.pk %}">Delete</a>
-                            </div>
-                        </td>
+                        <th>Profile Photo</th>
+                        <th>
+                            Name
+                            <span class="sort-controls">
+                                <a class="{% if current_sort == 'first_name' and current_order == 'asc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=first_name&order=asc">▲</a>
+                                <a class="{% if current_sort == 'first_name' and current_order == 'desc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=first_name&order=desc">▼</a>
+                            </span>
+                        </th>
+                        <th>
+                            Email
+                            <span class="sort-controls">
+                                <a class="{% if current_sort == 'email' and current_order == 'asc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=email&order=asc">▲</a>
+                                <a class="{% if current_sort == 'email' and current_order == 'desc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=email&order=desc">▼</a>
+                            </span>
+                        </th>
+                        <th>
+                            Department
+                            <span class="sort-controls">
+                                <a class="{% if current_sort == 'department' and current_order == 'asc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=department&order=asc">▲</a>
+                                <a class="{% if current_sort == 'department' and current_order == 'desc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=department&order=desc">▼</a>
+                            </span>
+                        </th>
+                        <th>
+                            Role
+                            <span class="sort-controls">
+                                <a class="{% if current_sort == 'role' and current_order == 'asc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=role&order=asc">▲</a>
+                                <a class="{% if current_sort == 'role' and current_order == 'desc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=role&order=desc">▼</a>
+                            </span>
+                        </th>
+                        <th>
+                            Account
+                            <span class="sort-controls">
+                                <a class="{% if current_sort == 'account' and current_order == 'asc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=account&order=asc">▲</a>
+                                <a class="{% if current_sort == 'account' and current_order == 'desc' %}active{% endif %}" href="?q={{ query|urlencode }}&sort=account&order=desc">▼</a>
+                            </span>
+                        </th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>
+                                {% if employee.profile_photo %}
+                                    <img class="photo-thumb" src="{{ employee.profile_photo.url }}" alt="{{ employee.first_name }} {{ employee.last_name }}">
+                                {% else %}
+                                    <span class="avatar">{{ employee.first_name|first }}{{ employee.last_name|first }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'employee_detail' employee.pk %}">
+                                    {{ employee.first_name }} {{ employee.last_name }}
+                                </a>
+                            </td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.department }}</td>
+                            <td>{{ employee.role }}</td>
+                            <td>
+                                {% if employee.user %}
+                                    {{ employee.user.username }}
+                                {% else %}
+                                    Not linked
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a href="{% url 'employee_detail' employee.pk %}">View</a>
+                                    <a href="{% url 'employee_update' employee.pk %}">Edit</a>
+                                    <a href="{% url 'employee_delete' employee.pk %}">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No employees found.</p>
-        <a class="button" href="{% url 'employee_create' %}">Add First Employee</a>
+        {% if query %}
+            <p>No matching employees found for "{{ query }}".</p>
+        {% else %}
+            <p>No employees found.</p>
+            <a class="button" href="{% url 'employee_create' %}">Add First Employee</a>
+        {% endif %}
     {% endif %}
 </section>
 {% endblock %}
