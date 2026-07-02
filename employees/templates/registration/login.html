@@ -1,24 +1,108 @@
+{#login page#}
 {% extends 'base.html' %}
 
 {% block title %}Login | Employee Management{% endblock %}
 
 {% block content %}
-<section class="panel">
-    <h1>Login</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
+
+<div class="login-wrapper">
+
+    <div class="panel login-panel">
+
+        <h1>👨‍💼 Employee Management</h1>
+        <p class="login-subtitle">Welcome Back! Please login to continue.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
             <div class="form-row">
-                {{ field.label_tag }}
+                <label>{{ field.label }}</label>
                 {{ field }}
                 {{ field.errors }}
             </div>
-        {% endfor %}
-        <div class="actions">
-            <button type="submit">Login</button>
-            <a class="button secondary" href="{% url 'register' %}">Create Account</a>
-        </div>
-    </form>
-</section>
+            {% endfor %}
+
+            <button class="login-btn" type="submit">
+                Login
+            </button>
+
+            <a class="button secondary register-btn" href="{% url 'register' %}">
+                Create Account
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+
+.login-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:75vh;
+}
+
+.login-panel{
+    width:420px;
+    text-align:center;
+}
+
+.login-panel h1{
+    color: #3966ca;
+    margin-bottom:10px;
+}
+
+.login-subtitle{
+    color:#666;
+    margin-bottom:25px;
+}
+
+.login-panel .form-row{
+    margin-bottom:18px;
+    text-align:left;
+}
+
+.login-panel label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+.login-panel input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    transition:.3s;
+}
+
+.login-panel input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 8px rgba(37,99,235,.3);
+    outline:none;
+}
+
+.login-btn{
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    font-size:16px;
+}
+
+.register-btn{
+    width:100%;
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+}
+
+
+</style>
+
 {% endblock %}
