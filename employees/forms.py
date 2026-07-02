@@ -10,7 +10,7 @@ class EmployeeForm(forms.ModelForm):
     # --- IMPROVEMENT: Phone Validation ---
     phone_validator = RegexValidator(
         regex=r'^\d{10,15}$',
-        message="Phone number must be entered in the format: '999999999'. Up to 15 digits allowed."
+        message="Phone number must be entered in the format: '999999999'. Up to 10 digits allowed."
     )
     phone = forms.CharField(validators=[phone_validator], required=False)
 
