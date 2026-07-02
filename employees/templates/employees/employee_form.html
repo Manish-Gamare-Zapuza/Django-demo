@@ -3,7 +3,10 @@
 {% block title %}{{ title }} | Employee Management{% endblock %}
 
 {% block content %}
-<section class="panel">
+
+<!-- changed <section class="panel" ></section> -->
+
+    <section class="panel" style="max-width: 500px; margin: 32px auto;">
     <h1>{{ title }}</h1>
     <form method="post">
         {% csrf_token %}
