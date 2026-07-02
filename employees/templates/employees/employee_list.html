@@ -8,6 +8,25 @@
         <h1>Employees</h1>
         <a class="button" href="{% url 'employee_create' %}">Add Employee</a>
     </div>
+
+    <!-- Search Form -->
+    <form method="GET" style="margin:20px 0;">
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search by name, email or department"
+            style="padding:8px; width:300px;">
+
+        <button type="submit" class="button">
+            Search
+        </button>
+
+        <a class="button" href="{% url 'employee_list' %}">
+            Clear
+        </a>
+    </form>
+
 <form method="GET" style="margin-bottom: 20px;">
     <input type="text" name="search" placeholder="Search by first name..." value="{{ request.GET.search }}" style="max-width: 300px;">
     <button type="submit" class="button" style="margin-left: 10px;">Search</button>
