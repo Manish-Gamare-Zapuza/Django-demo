@@ -13,8 +13,8 @@ class EmployeeViewsTest(TestCase):
             first_name='Asha',
             last_name='Patel',
             email='asha@example.com',
-            department='ENG',  # Updated to match choices
-            role='DEV',        # Updated to match choices
+            department='Engineering',
+            role='Developer',
             salary=50000,
             phone='9876543210',
             address='Pune',
@@ -33,6 +33,7 @@ class EmployeeViewsTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Asha Patel')
+        self.assertContains(response, 'Engineering')
 
     def test_create_employee(self):
         self.client.login(username='teacher', password='testpass123')
@@ -42,8 +43,8 @@ class EmployeeViewsTest(TestCase):
             'first_name': 'Rahul',
             'last_name': 'Sharma',
             'email': 'rahul@example.com',
-            'department': 'HR',    # Updated to match choices
-            'role': 'MGR',         # Updated to match choices
+            'department': 'HR',
+            'role': 'Manager',
             'salary': '65000',
             'phone': '9999999999',
             'address': 'Mumbai',
@@ -60,8 +61,8 @@ class EmployeeViewsTest(TestCase):
             'first_name': 'Asha',
             'last_name': 'Patel',
             'email': 'asha@example.com',
-            'department': 'PROD',  # Updated to match choices
-            'role': 'LEAD',        # Updated to match choices
+            'department': 'Product',
+            'role': 'Lead Developer',
             'salary': '75000',
             'phone': '9876543210',
             'address': 'Pune',
@@ -69,8 +70,8 @@ class EmployeeViewsTest(TestCase):
 
         self.assertRedirects(response, reverse('employee_detail', args=[self.employee.pk]))
         self.employee.refresh_from_db()
-        self.assertEqual(self.employee.department, 'PROD')
-        self.assertEqual(self.employee.role, 'LEAD')
+        self.assertEqual(self.employee.department, 'Product')
+        self.assertEqual(self.employee.role, 'Lead Developer')
 
     def test_delete_employee(self):
         self.client.login(username='teacher', password='testpass123')
@@ -79,5 +80,3 @@ class EmployeeViewsTest(TestCase):
 
         self.assertRedirects(response, reverse('employee_list'))
         self.assertFalse(Employee.objects.filter(pk=self.employee.pk).exists())
-
-
