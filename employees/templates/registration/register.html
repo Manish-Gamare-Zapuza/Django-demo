@@ -14,9 +14,16 @@
                 {{ field.errors }}
             </div>
         {% endfor %}
-        <div class="actions">
+
+
+        <div class="actions" style="display: flex; gap: 10px; align-items: center; width: 100%;">
             <button type="submit">Register</button>
             <a class="button secondary" href="{% url 'login' %}">Login</a>
+
+
+            <a class="button" href="/" style="margin-left: auto; text-decoration: none; display: inline-block; text-align: center;">
+                Back
+            </a>
         </div>
     </form>
 </section>
