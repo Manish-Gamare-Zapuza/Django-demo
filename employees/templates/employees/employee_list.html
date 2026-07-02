@@ -3,56 +3,575 @@
 {% block title %}Employees | Employee Management{% endblock %}
 
 {% block content %}
-<section class="panel">
-    <div class="page-header">
-        <h1>Employees</h1>
-        <a class="button" href="{% url 'employee_create' %}">Add Employee</a>
+<div class="list-container">
+    <div class="list-header">
+        <div class="header-info">
+            <h1>Employees</h1>
+            <p class="subtitle">
+                {% if query %}
+                    Found {{ employees|length }} result{{ employees|length|pluralize }} for "{{ query }}".
+                {% elif employees %}
+                    Manage your team of {{ employees|length }} employee{{ employees|length|pluralize }}.
+                {% else %}
+                    Manage your team members and roles.
+                {% endif %}
+            </p>
+        </div>
+        <a class="btn btn-primary" href="{% url 'employee_create' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add Employee
+        </a>
     </div>
 
+    <form method="get" action="{% url 'employee_list' %}" class="search-form">
+        <div class="search-input-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.603 10.603z" />
+            </svg>
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search employees by name, department, or role..." aria-label="Search Employees">
+            {% if query %}
+                <a href="{% url 'employee_list' %}" class="clear-search" title="Clear Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary search-btn">Search</button>
+    </form>
+
     {% if employees %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th>Role</th>
-                    <th>Account</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for employee in employees %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'employee_detail' employee.pk %}">
-                                {{ employee.first_name }} {{ employee.last_name }}
-                            </a>
-                        </td>
-                        <td>{{ employee.email }}</td>
-                        <td>{{ employee.department }}</td>
-                        <td>{{ employee.role }}</td>
-                        <td>
-                            {% if employee.user %}
-                                {{ employee.user.username }}
-                            {% else %}
-                                Not linked
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <a href="{% url 'employee_detail' employee.pk %}">View</a>
-                                <a href="{% url 'employee_update' employee.pk %}">Edit</a>
-                                <a href="{% url 'employee_delete' employee.pk %}">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Email Address</th>
+                            <th>Department</th>
+                            <th>Role / Title</th>
+                            <th>Linked Account</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                            <tr>
+                                <td>
+                                    <div class="employee-profile">
+                                        <div class="avatar avatar-{% cycle 'blue' 'green' 'indigo' 'purple' 'pink' 'amber' %}">
+                                            {{ employee.first_name.0|upper }}{{ employee.last_name.0|upper }}
+                                        </div>
+                                        <div class="profile-details">
+                                            <a class="employee-name" href="{% url 'employee_detail' employee.pk %}">
+                                                {{ employee.first_name }} {{ employee.last_name }}
+                                            </a>
+                                            <span class="employee-id">ID: #{{ employee.pk|stringformat:"04d" }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="email-text">{{ employee.email }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-dept">{{ employee.department }}</span>
+                                </td>
+                                <td>
+                                    <span class="role-text">{{ employee.role }}</span>
+                                </td>
+                                <td>
+                                    {% if employee.user %}
+                                        <span class="badge badge-linked">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="badge-icon">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                            </svg>
+                                            {{ employee.user.username }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-unlinked">Unlinked</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <a href="{% url 'employee_detail' employee.pk %}" class="action-btn btn-view" title="View Profile">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            View
+                                        </a>
+                                        <a href="{% url 'employee_update' employee.pk %}" class="action-btn btn-edit" title="Edit Profile">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                            </svg>
+                                            Edit
+                                        </a>
+                                        <a href="{% url 'employee_delete' employee.pk %}" class="action-btn btn-delete" title="Delete Profile">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                            </svg>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
-        <p>No employees found.</p>
-        <a class="button" href="{% url 'employee_create' %}">Add First Employee</a>
+        <div class="empty-state-card">
+            {% if query %}
+                <div class="empty-icon search-empty">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3>No matches found</h3>
+                <p>We couldn't find any employees matching "<strong>{{ query }}</strong>". Try checking your spelling or using different keywords.</p>
+                <a class="btn btn-secondary" href="{% url 'employee_list' %}">Clear Search</a>
+            {% else %}
+                <div class="empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                </div>
+                <h3>No Employees Registered</h3>
+                <p>Get started by adding the first employee profile to your directory.</p>
+                <a class="btn btn-primary" href="{% url 'employee_create' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add First Employee
+                </a>
+            {% endif %}
+        </div>
     {% endif %}
-</section>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    .list-container,
+    .list-container h1,
+    .list-container th,
+    .list-container td,
+    .list-container .btn,
+    .list-container .badge {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+
+    .list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-top: 10px;
+    }
+
+    .header-info h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.025em;
+    }
+
+    .header-info .subtitle {
+        font-size: 14.5px;
+        color: #64748b;
+        margin: 4px 0 0 0;
+    }
+
+    /* Search Bar */
+    .search-form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 14px;
+        width: 20px;
+        height: 20px;
+        stroke: #94a3b8;
+        pointer-events: none;
+    }
+
+    .search-input-wrapper input {
+        width: 100%;
+        padding: 10px 14px 10px 44px;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14.5px;
+        color: #1e293b;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+    }
+
+    .search-input-wrapper input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        background-color: #ffffff;
+    }
+
+    .clear-search {
+        position: absolute;
+        right: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        color: #94a3b8;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .clear-search:hover {
+        background-color: #f1f5f9;
+        color: #64748b;
+    }
+
+    .clear-search svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .search-btn {
+        flex-shrink: 0;
+        min-height: 40px;
+        padding: 10px 24px !important;
+    }
+
+    .empty-icon.search-empty {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    /* Cards & Table */
+    .table-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #ffffff;
+        margin: 0;
+    }
+
+    th {
+        padding: 16px 24px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #475569;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: left;
+    }
+
+    td {
+        padding: 16px 24px;
+        font-size: 14.5px;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    /* Profile Cell */
+    .employee-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .avatar-blue { background-color: #dbeafe; color: #1e40af; }
+    .avatar-green { background-color: #d1fae5; color: #065f46; }
+    .avatar-indigo { background-color: #e0e7ff; color: #3730a3; }
+    .avatar-purple { background-color: #f3e8ff; color: #6b21a8; }
+    .avatar-pink { background-color: #fce7f3; color: #9d174d; }
+    .avatar-amber { background-color: #fef3c7; color: #92400e; }
+
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .employee-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        transition: color 0.15s ease;
+        text-decoration: none !important;
+    }
+
+    .employee-name:hover {
+        color: #2563eb;
+    }
+
+    .employee-id {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 1px;
+    }
+
+    /* Email Text */
+    .email-text {
+        color: #475569;
+        font-weight: 450;
+    }
+
+    /* Role Text */
+    .role-text {
+        color: #334155;
+        font-weight: 450;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        font-size: 12.5px;
+        font-weight: 550;
+        border-radius: 9999px;
+    }
+
+    .badge-dept {
+        background-color: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+    }
+
+    .badge-linked {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .badge-unlinked {
+        background-color: #f1f5f9;
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .badge-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Action Buttons */
+    .row-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #475569;
+        transition: all 0.15s ease;
+        text-decoration: none !important;
+    }
+
+    .action-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: #64748b;
+        transition: all 0.15s ease;
+    }
+
+    .action-btn:hover {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+        color: #1e293b;
+    }
+
+    .btn-view:hover {
+        border-color: #93c5fd;
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    .btn-view:hover svg {
+        stroke: #2563eb;
+    }
+
+    .btn-edit:hover {
+        border-color: #fef08a;
+        background: #fef9c3;
+        color: #a16207;
+    }
+    .btn-edit:hover svg {
+        stroke: #a16207;
+    }
+
+    .btn-delete:hover {
+        border-color: #fca5a5;
+        background: #fef2f2;
+        color: #dc2626;
+    }
+    .btn-delete:hover svg {
+        stroke: #dc2626;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+        min-height: 40px;
+        border: 1px solid transparent;
+        text-decoration: none !important;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Empty state */
+    .empty-state-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 40px;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    .empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        border-radius: 50%;
+        margin-bottom: 18px;
+    }
+
+    .empty-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .empty-state-card h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .empty-state-card p {
+        margin: 8px 0 20px 0;
+        font-size: 14px;
+        color: #64748b;
+        max-width: 360px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+        .list-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        th:nth-child(2), td:nth-child(2),
+        th:nth-child(5), td:nth-child(5) {
+            display: none; /* Hide Email and Linked Account on small screens */
+        }
+    }
+</style>
 {% endblock %}
+

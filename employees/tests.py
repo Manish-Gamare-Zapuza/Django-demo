@@ -80,3 +80,41 @@ class EmployeeViewsTest(TestCase):
 
         self.assertRedirects(response, reverse('employee_list'))
         self.assertFalse(Employee.objects.filter(pk=self.employee.pk).exists())
+
+    def test_search_employees(self):
+        self.client.login(username='teacher', password='testpass123')
+
+        # Create another employee to test filtering
+        Employee.objects.create(
+            user=None,
+            first_name='John',
+            last_name='Doe',
+            email='john@example.com',
+            department='HR',
+            role='Recruiter',
+            salary=40000,
+        )
+
+        # 1. Search by name (Asha)
+        response = self.client.get(reverse('employee_list'), {'q': 'Asha'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Asha Patel')
+        self.assertNotContains(response, 'John Doe')
+
+        # 2. Search by department (HR)
+        response = self.client.get(reverse('employee_list'), {'q': 'HR'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'John Doe')
+        self.assertNotContains(response, 'Asha Patel')
+
+        # 3. Search by role (Developer)
+        response = self.client.get(reverse('employee_list'), {'q': 'Developer'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Asha Patel')
+        self.assertNotContains(response, 'John Doe')
+
+        # 4. Search with no matches
+        response = self.client.get(reverse('employee_list'), {'q': 'Nonexistent'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No matches found')
+

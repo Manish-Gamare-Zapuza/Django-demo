@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import EmployeeForm, RegisterForm
@@ -32,8 +33,16 @@ def register(request):
 
 @login_required
 def employee_list(request):
+    query = request.GET.get('q', '').strip()
     employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
-    return render(request, 'employees/employee_list.html', {'employees': employees})
+    if query:
+        employees = employees.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(role__icontains=query) |
+            Q(department__icontains=query)
+        )
+    return render(request, 'employees/employee_list.html', {'employees': employees, 'query': query})
 
 
 @login_required
