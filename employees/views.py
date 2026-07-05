@@ -52,6 +52,16 @@ def employee_list(request):
         'search': search,
     })
 
+    query = request.GET.get('q', '').strip()
+    employees = Employee.objects.select_related('user').order_by('first_name', 'last_name')
+    if query:
+        employees = employees.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(role__icontains=query) |
+            Q(department__icontains=query)
+        )
+    return render(request, 'employees/employee_list.html', {'employees': employees, 'query': query})
 
 
 @login_required
