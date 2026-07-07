@@ -5,15 +5,29 @@
 {% block content %}
 <section class="panel">
     <h1>{{ title }}</h1>
-    <form method="post">
+
+    <!-- Added by Aman Sharma: Enable image upload -->
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
             <div class="form-row">
                 {{ field.label_tag }}
                 {{ field }}
+
+                <!-- Added by Aman Sharma: Image preview while editing -->
+                {% if field.name == "profile_photo" and form.instance.profile_photo %}
+                    <div style="margin-top:10px;">
+                        <img src="{{ form.instance.profile_photo.url }}"
+                             alt="Profile Photo"
+                             width="120"
+                             style="border-radius:8px;border:1px solid #ddd;">
+                    </div>
+                {% endif %}
+
                 {{ field.errors }}
             </div>
         {% endfor %}
+
         <div class="actions">
             <button type="submit">Save</button>
             <a class="button secondary" href="{% url 'employee_list' %}">Cancel</a>

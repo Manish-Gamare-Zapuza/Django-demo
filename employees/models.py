@@ -19,6 +19,13 @@ class Employee(models.Model):
     address = models.TextField(blank=True)
     date_hired = models.DateField(auto_now_add=True)
 
+    # This is my new field by Aman Sharma
+    profile_photo = models.ImageField(
+        upload_to="employee_photos/",
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.role}"
 

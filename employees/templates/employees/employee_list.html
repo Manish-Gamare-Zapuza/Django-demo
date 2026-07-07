@@ -13,6 +13,8 @@
         <table>
             <thead>
                 <tr>
+                    <!-- Added by Aman Sharma -->
+                    <th>Photo</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Department</th>
@@ -24,6 +26,24 @@
             <tbody>
                 {% for employee in employees %}
                     <tr>
+
+                        <!-- Added by Aman Sharma: Employee Profile Photo -->
+                        <td>
+                            {% if employee.profile_photo %}
+                                <img src="{{ employee.profile_photo.url }}"
+                                     alt="{{ employee.first_name }}"
+                                     width="60"
+                                     height="60"
+                                     style="border-radius:50%;object-fit:cover;">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ employee.first_name }}+{{ employee.last_name }}&background=0D8ABC&color=fff"
+                                     alt="Default Avatar"
+                                     width="60"
+                                     height="60"
+                                     style="border-radius:50%;">
+                            {% endif %}
+                        </td>
+
                         <td>
                             <a href="{% url 'employee_detail' employee.pk %}">
                                 {{ employee.first_name }} {{ employee.last_name }}
